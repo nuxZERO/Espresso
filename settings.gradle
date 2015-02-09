@@ -1,1 +1,1 @@
-include ':app', ':expresso', ':sample'
+include ':sample', ':library'

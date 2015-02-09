@@ -1,4 +1,4 @@
-package me.cafecode.android.libraries.expresso;
+package me.cafecode.android.libraries.espresso;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
