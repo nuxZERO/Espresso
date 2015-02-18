@@ -3,7 +3,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 // This is the library version used when deploying the artifact
-version = "0.1"
+version = "0.5"
 
 android {
     compileSdkVersion 21
@@ -12,7 +12,7 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 1
+        versionCode 5
         versionName version
     }
     buildTypes {
@@ -25,7 +25,7 @@ android {
 
 def siteUrl = 'https://github.com/nuxZERO/Espresso'      // Homepage URL of the library
 def gitUrl = 'https://github.com/nuxZERO/Espresso.git'   // Git repository URL
-group = "me.cafecode.android.libraries.espresso"
+group = "me.cafecode.espresso"
 
 install {
     repositories.mavenInstaller {
@@ -36,6 +36,7 @@ install {
 
                 // Add your description here
                 name 'Espresso library'
+                description 'Espresso library'
                 url siteUrl
 
                 // Set your license
@@ -77,6 +78,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
 }
+
 artifacts {
     archives javadocJar
     archives sourcesJar
@@ -98,7 +100,29 @@ bintray {
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
         publish = true
+        //Optional version descriptor
+        version {
+            name = project.version //Bintray logical version name
+            desc = "optional, version-specific description"
+//                released  = 'optional, date of the version release' //2 possible values: date in the format of 'yyyy-MM-dd'T'HH:mm:ss.SSSZZ' OR a java.util.Date instance
+//                vcsTag = '1.3.0'
+//                attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin'] //Optional version-level attributes
+            gpg {
+                sign = true //Determines whether to GPG sign the files. The default is false
+                passphrase = properties.getProperty("gpg.passphrase") //Optional. The passphrase for GPG signing'
+            }
+            mavenCentralSync {
+                sync = true //Optional (true by default). Determines whether to sync the version to Maven Central.
+                user = properties.getProperty("oss.sonatype.user") //OSS user token
+                password = properties.getProperty("oss.sonatype.password") //OSS user password
+                close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+            }
+        }
     }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.2.1'
 }
 
 dependencies {
